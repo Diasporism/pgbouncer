@@ -1,0 +1,14 @@
+# Ignore useless and engineer specific files
+.DS_Store
+.idea/
+.vscode/
+
+# Ignore potentially dangerous files/folders
+.git
+
+# Ingore the ignores
+.gitignore
+.dockerignore
+
+# Ignore the compose
+docker-compose.yml

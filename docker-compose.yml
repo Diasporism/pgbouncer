@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+  postgresql:
+    image: postgres:14.6-alpine
+    environment:
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: password
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  pgbouncer:
+    image: bitnami/pgbouncer:1.17.0
+    ports:
+      - 6432:6432
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      PGBOUNCER_DATABASE: postgres
+      PGBOUNCER_MAX_CLIENT_CONN: 1000
+      PGBOUNCER_MAX_DB_CONNECTIONS: 16
+      PGBOUNCER_POOL_MODE: session
+      POSTGRESQL_HOST: postgresql
+      POSTGRESQL_USERNAME: postgres
+      POSTGRESQL_PASSWORD: password
+      POSTGRESQL_DATABASE: postgres
+volumes:
+  postgres_data:
+    external: true
